@@ -21,9 +21,6 @@ isValidLevelState = ( contents ) ->
 chipHasMatchingGenerator = ( chipElement, levelContent ) ->
   return _.find( levelContent, {element: chipElement, type: 'G'} )?
 
-isGoalState = ( state ) ->
-  return state.elevator == 3 and state.levels[3].length == 14
-
 generateElevatorLoads = ( levelContents ) ->
   loads = []
   # All pairs are equivalent
@@ -54,25 +51,11 @@ computeStateHash = ( state ) ->
   return hash
 
 
-#The first floor contains a strontium generator, a strontium-compatible microchip, a plutonium generator, and a plutonium-compatible microchip.
-#The second floor contains a thulium generator, a ruthenium generator, a ruthenium-compatible microchip, a curium generator, and a curium-compatible microchip.
-#The third floor contains a thulium-compatible microchip.
-#The fourth floor contains nothing relevant.
-#initialState =
-#  elevator: 0
-#  levels: [
-#    [ {element: 'S', type: 'G'}, {element: 'S', type: 'M'}, {element: 'P', type: 'G'}, {element: 'P', type: 'M'} ]
-#    [ {element: 'T', type: 'G'}, {element: 'R', type: 'G'}, {element: 'R', type: 'M'}, {element: 'C', type: 'G'}, {element: 'C', type: 'M'} ]
-#    [ {element: 'T', type: 'M'} ]
-#    []
-#  ]
-#  steps: []
-#  steps_count: 0
-
+# Part A
 initialState =
   elevator: 0
   levels: [
-    [ {element: 'S', type: 'G'}, {element: 'S', type: 'M'}, {element: 'P', type: 'G'}, {element: 'P', type: 'M'}, {element: 'E', type: 'G'}, {element: 'E', type: 'M'}, {element: 'D', type: 'G'}, {element: 'D', type: 'M'} ]
+    [ {element: 'S', type: 'G'}, {element: 'S', type: 'M'}, {element: 'P', type: 'G'}, {element: 'P', type: 'M'} ]
     [ {element: 'T', type: 'G'}, {element: 'R', type: 'G'}, {element: 'R', type: 'M'}, {element: 'C', type: 'G'}, {element: 'C', type: 'M'} ]
     [ {element: 'T', type: 'M'} ]
     []
@@ -80,10 +63,19 @@ initialState =
   steps: []
   steps_count: 0
 
-#The first floor contains a hydrogen-compatible microchip and a lithium-compatible microchip.
-#The second floor contains a hydrogen generator.
-#The third floor contains a lithium generator.
-#The fourth floor contains nothing relevant.
+# Part B
+#initialState =
+#  elevator: 0
+#  levels: [
+#    [ {element: 'S', type: 'G'}, {element: 'S', type: 'M'}, {element: 'P', type: 'G'}, {element: 'P', type: 'M'}, {element: 'E', type: 'G'}, {element: 'E', type: 'M'}, {element: 'D', type: 'G'}, {element: 'D', type: 'M'} ]
+#    [ {element: 'T', type: 'G'}, {element: 'R', type: 'G'}, {element: 'R', type: 'M'}, {element: 'C', type: 'G'}, {element: 'C', type: 'M'} ]
+#    [ {element: 'T', type: 'M'} ]
+#    []
+#  ]
+#  steps: []
+#  steps_count: 0
+
+# Test data
 #initialState =
 #  elevator: 0
 #  levels: [
@@ -95,11 +87,17 @@ initialState =
 #  steps: []
 #  steps_count: 0
 
-
 for x in [0..3]
   initialState.levels[x] = _.orderBy( initialState.levels[x], [ 'element', 'type' ] )
 
 initialState.hash = computeStateHash( initialState )
+
+isGoalState = (() ->
+  target = 0
+  target += level.length for level in initialState.levels
+  return ( state ) ->
+    return state.elevator == 3 and state.levels[3].length == target
+)()
 
 printState = ( state ) ->
   for x in [3..0]
