@@ -8,7 +8,7 @@
 positions = [ 13, 5, 17, 3, 7, 19 ]
 start = [ 11, 0, 11, 0, 2, 17 ]
 
-partB = false
+partB = true
 if partB
   positions.push( 11 )
   start.push( 0 )
