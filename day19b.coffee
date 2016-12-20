@@ -68,9 +68,8 @@ computeBruteForce = ( size )->
 # fn(n) = fn(n-1) * 3 - 2
 
 step = ( s ) ->
-  return 1 if s == 1
-  return 2 if s == 2
-  return step( s - 1 ) * 3 - 2
+  return 1 if s == 0
+  return Math.pow( 3, s - 1 ) + 1
 
 compute2 = ( size ) ->
   start = null
