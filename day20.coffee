@@ -1,6 +1,7 @@
 _ = require('lodash')
 blacklist = require( "./day20_data" )
 
+# Reduce the blacklist
 x = 0
 blacklist = _.orderBy( blacklist, [ (data)->data[0] ] )
 while x < blacklist.length
@@ -9,6 +10,7 @@ while x < blacklist.length
     blacklist.splice( x+1, 1 )
   x++
   
+# Part A
 isBlacklisted = ( ip )->
   for data in blacklist
     return true if data[0] <= ip and ip <= data[1]
@@ -18,8 +20,8 @@ for ip in [0..4294967295]
   if !isBlacklisted(ip)
     console.log "A: #{ip}"
     break
-    
-    
+
+# Part B
 count = 4294967296
 for data in blacklist
   count -= (data[1] - data[0]) + 1
