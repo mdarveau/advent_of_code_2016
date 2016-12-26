@@ -2,16 +2,11 @@ commands = [
   "cpy a d"
   "cpy 4 c"
   "cpy 643 b"
-#  "inc d"
-#  "dec b"
-#  "jnz b -2"
-#  "dec c"
-#  "jnz c -5"
-  "mul b c d"  # New: d+= b * c
-  "noop"
-  "noop"
-  "noop"
-  "noop"
+  "inc d"
+  "dec b"
+  "jnz b -2"
+  "dec c"
+  "jnz c -5"
   "cpy d a"
   "jnz 0 0"
   "cpy a b"
@@ -42,13 +37,12 @@ commands = [
 getValue = ( registers, param ) ->
   return if Number.isInteger( parseInt( param ) ) then parseInt( param ) else registers[param]
 
-output = ""
     
 run = ( registers ) ->
+  output = ""
   x = 0
   while x < commands.length
     command = commands[x]
-#    console.log "Running (#{x}) #{command} #{JSON.stringify( registers )}"
     if command[0] == 'cpy'
       unless Number.isInteger( parseInt( command[2] ) )
         registers[command[2]] = getValue( registers, command[1] )
@@ -66,7 +60,10 @@ run = ( registers ) ->
       
     else if command[0] == 'jnz'
       val = getValue( registers, command[1] )
-      if val != 0
+      if val < 0
+        console.log "tgl, value of #{command[1]} is negative (#{val})"
+        return false
+      else if val != 0
         x += getValue( registers, command[2] )
       else
         x++
@@ -98,23 +95,19 @@ run = ( registers ) ->
       x++
     else if command[0] == 'out'
       output += getValue( registers, command[1] )
-      for x in [0...output.length]
-        return false if output.charAt(x) != (if x % 2 == 0 then '0' else '1')
-
+      for i in [0...output.length]
+        return false if output.charAt(i) != (if i % 2 == 1 then '1' else '0')
+      if output.length > 1000
+        return true
       x++
       
   return true
-  #  process.stdout.write ""+x
-  
-  #  console.log commands
-  #  console.log "#{JSON.stringify( registers )}"
 
 process.stdout._handle.setBlocking( true )
 
 value = 0
 
 while true
-  console.log value
   if run(
       a: value
       b: 0
